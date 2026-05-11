@@ -2,7 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./",
-  timeout: 60_000,
+  // CI roda contra prod BR a partir de runners US/EU — latency BR ↔ runner
+  // empurra navegação pra 30-60s. Local rodando do BR ~2s/teste.
+  timeout: 90_000,
   retries: 0,
   reporter: [
     ["list"],
@@ -16,8 +18,8 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
     trace: "retain-on-failure",
-    actionTimeout: 15_000,
-    navigationTimeout: 30_000,
+    actionTimeout: 20_000,
+    navigationTimeout: 60_000,
   },
   projects: [
     {

@@ -14,7 +14,7 @@ jobs:
   e2e:
     name: Playwright contra prod
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v6
 
