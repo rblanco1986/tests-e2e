@@ -35,6 +35,6 @@ A suite testa **prod direto**, não build local. Útil pra detectar quebras pós
 
 - [CLAUDE.md](CLAUDE.md) — visão geral, regras de negócio que valida, pendências.
 
-## Atenção pós-migração Plotly→Recharts (terça 2026-05-12)
+## Histórico
 
-Selector `.js-plotly-plot` (linhas 33 e 429 do spec) precisa virar `.recharts-wrapper` ou `data-testid` quando a migração entrar em prod.
+- 2026-05-11: migração Plotly→Recharts em prod. Seletor atualizado de `.js-plotly-plot` para `.recharts-wrapper` (com `.first()` por causa de múltiplos charts/subplots).

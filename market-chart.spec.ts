@@ -29,8 +29,8 @@ async function selectTicker(page: Page, query: string, timeoutMs = 25_000) {
     await input.press("Enter");
   }
 
-  // Aguarda o Plotly renderizar (svg dentro do gráfico)
-  await page.waitForSelector('.js-plotly-plot svg', { timeout: timeoutMs });
+  // Aguarda o Recharts renderizar (svg dentro do gráfico)
+  await page.waitForSelector('.recharts-wrapper svg', { timeout: timeoutMs });
 }
 
 /** Coleta todos os erros de console JS durante a execução de uma ação */
@@ -79,7 +79,7 @@ test.describe("1. Carregamento da página", () => {
 
   test("1.3 abas principais estão presentes", async ({ page }) => {
     await goto(page);
-    for (const tab of ["Gráfico", "Fundamentos", "Dividendos", "Comparar", "Opções", "Screener"]) {
+    for (const tab of ["Gráfico", "Fundamentos", "Dividendos", "Comparar", "Análise", "Modelo", "Opções"]) {
       await expect(page.getByRole("tab", { name: tab })).toBeVisible();
     }
   });
@@ -113,7 +113,7 @@ test.describe("2. Ações brasileiras (B3)", () => {
       expect(critical, `Erros ao carregar ${stock.query}: ${critical.join(" | ")}`).toHaveLength(0);
 
       // Gráfico deve estar visível
-      await expect(page.locator('.js-plotly-plot')).toBeVisible();
+      await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
     });
   }
 });
@@ -127,7 +127,7 @@ test.describe("3. Ações americanas (NYSE/NASDAQ)", () => {
     test(`3.${usStocks.indexOf(ticker) + 1} seleciona ${ticker}`, async ({ page }) => {
       await goto(page);
       await selectTicker(page, ticker);
-      await expect(page.locator('.js-plotly-plot')).toBeVisible();
+      await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
     });
   }
 });
@@ -153,7 +153,7 @@ test.describe("4. Seleção de períodos", () => {
         });
         const apiErrors = failures.filter((f) => f.url.includes("api.ricardoblanco"));
         expect(apiErrors, `Falhas de API para período ${period}: ${JSON.stringify(apiErrors)}`).toHaveLength(0);
-        await expect(page.locator('.js-plotly-plot')).toBeVisible();
+        await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
       } else {
         test.skip(true, `Botão "${period}" não encontrado`);
       }
@@ -179,7 +179,7 @@ test.describe("5. Indicadores técnicos", () => {
         await btn.first().click();
         await page.waitForTimeout(2000);
         // Gráfico ainda deve estar presente após toggle
-        await expect(page.locator('.js-plotly-plot')).toBeVisible();
+        await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
       } else {
         test.skip(true, `Indicador "${ind}" não encontrado na UI`);
       }
@@ -223,7 +223,7 @@ test.describe("6. Navegação por abas", () => {
       await page.waitForTimeout(3000);
     }
     // Gráfico ainda deve existir
-    await expect(page.locator('.js-plotly-plot')).toBeVisible();
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
   });
 
   test("6.4 aba Opções carrega sem travar", async ({ page }) => {
@@ -335,7 +335,7 @@ test.describe("8. Edge cases", () => {
     await page.waitForTimeout(5000);
 
     // Gráfico ainda deve estar visível
-    await expect(page.locator('.js-plotly-plot')).toBeVisible();
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
   });
 
   test("8.5 redimensionamento de janela não quebra gráfico", async ({ page }) => {
@@ -344,23 +344,23 @@ test.describe("8. Edge cases", () => {
 
     await page.setViewportSize({ width: 375, height: 812 }); // mobile
     await page.waitForTimeout(2000);
-    await expect(page.locator('.js-plotly-plot')).toBeVisible();
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
 
     await page.setViewportSize({ width: 1920, height: 1080 }); // large desktop
     await page.waitForTimeout(2000);
-    await expect(page.locator('.js-plotly-plot')).toBeVisible();
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
   });
 
   test("8.6 FII é carregado corretamente (HGLG11)", async ({ page }) => {
     await goto(page);
     await selectTicker(page, "HGLG11");
-    await expect(page.locator('.js-plotly-plot')).toBeVisible();
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
   });
 
   test("8.7 BDR é carregado corretamente (AAPL34)", async ({ page }) => {
     await goto(page);
     await selectTicker(page, "AAPL34");
-    await expect(page.locator('.js-plotly-plot')).toBeVisible();
+    await expect(page.locator('.recharts-wrapper').first()).toBeVisible();
   });
 });
 
@@ -426,6 +426,6 @@ test.describe("10. Performance", () => {
     await goto(page);
     await selectTicker(page, "PETR4");
     // chartResponseTime nem sempre captura o tempo exato — valida que houve resposta
-    expect(page.locator('.js-plotly-plot')).toBeDefined();
+    expect(page.locator('.recharts-wrapper')).toBeDefined();
   });
 });

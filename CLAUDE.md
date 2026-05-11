@@ -57,10 +57,9 @@ Suite Playwright apontando para **URL de produção** (`https://www.ricardoblanc
 | Mudança no `site` | Impacto no tests-e2e |
 |---|---|
 | Renomear `<input placeholder="Ex: ...">` | Helper `goto()` quebra — atualizar seletor |
-| Mudar `.js-plotly-plot` (migração Plotly → Recharts em terça 2026-05-12) | `selectTicker` linha 33 e teste 10.2 linha 429 quebram — substituir por `.recharts-wrapper` ou data-testid |
+| Renomear/remover aba (ex: "Screener" → "Análise") | Teste 1.3 lista hard-coded de tabs — atualizar array |
+| Trocar lib de chart (ex: Recharts → outra) | Seletor `.recharts-wrapper` no spec — substituir |
 | Mudar URL base da página | Constante `URL` no topo do spec |
-
-**Já documentado**: a migração Plotly → Recharts da terça precisa atualizar essas referências em `market-chart.spec.ts`.
 
 ## Pendências
 
