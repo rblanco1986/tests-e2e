@@ -214,6 +214,9 @@ test.describe("6. Navegação por abas", () => {
   });
 
   test("6.3 aba Comparar — adicionar segunda ação", async ({ page }) => {
+    // Fecha qualquer dropdown/popover residual da busca anterior antes de
+    // clicar na aba — caso contrário um <li> da lista intercepta o ponteiro.
+    await page.keyboard.press("Escape");
     await page.getByRole("tab", { name: "Comparar" }).click();
     await page.waitForTimeout(2000);
     // Deve haver um segundo input de busca ou similar
@@ -245,12 +248,12 @@ test.describe("6. Navegação por abas", () => {
 test.describe("7. Screener", () => {
   test("7.1 screener BR executa e retorna resultados ou mensagem vazia", async ({ page }) => {
     await goto(page);
-    await page.getByRole("tab", { name: "Screener" }).click();
+    await page.getByRole("tab", { name: "Análise" }).click();
     await page.waitForTimeout(2000);
 
-    // Clica em Executar / Analisar / botão similar
-    const runBtn = page.getByRole("button", { name: /Executar|Analisar|Buscar|Run|Search/i });
-    if (await runBtn.isVisible()) {
+    // Clica em Executar / Buscar / botão similar (exclui "Analisar" da aba Modelo)
+    const runBtn = page.getByRole("button", { name: /^(Executar|Buscar|Run|Search)$/i });
+    if (await runBtn.first().isVisible()) {
       const failures = await collectNetworkFailures(page, async () => {
         await runBtn.click();
         await page.waitForTimeout(15_000);
@@ -264,7 +267,7 @@ test.describe("7. Screener", () => {
 
   test("7.2 screener US muda universe sem erro", async ({ page }) => {
     await goto(page);
-    await page.getByRole("tab", { name: "Screener" }).click();
+    await page.getByRole("tab", { name: "Análise" }).click();
     await page.waitForTimeout(2000);
 
     const usBtn = page.getByRole("button", { name: /^US$|^us$|EUA/i });
