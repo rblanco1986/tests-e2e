@@ -1,0 +1,30 @@
+# Deps
+node_modules/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Debug artifacts (screenshots/videos ad-hoc)
+*.png
+*.mp4
+*.zip
+!playwright.config.ts
+
+# Env vars / secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
